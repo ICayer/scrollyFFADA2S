@@ -25,7 +25,7 @@ export async function showStep4() {
   }
 
   if (!step4Container) {
-    step4Container = await loadSVG("/svg/step4_etoile_robe_perle2.svg", "step4SVG", "graphic");
+    step4Container = await loadSVG("./svg/step4_etoile_robe_perle2.svg", "step4SVG", "graphic");
     if (!step4Container) {
       console.error("❌ Impossible de charger step4Container");
       return Promise.reject("SVG non chargé");
