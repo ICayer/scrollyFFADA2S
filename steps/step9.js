@@ -21,7 +21,7 @@ export async function showStep9() {
   isStep9Active = true;
 
   if (!step9Container) {
-    step9Container = await loadSVG("/svg/step9_coeur2.svg", "step9SVG", "graphic");
+    step9Container = await loadSVG("./svg/step9_coeur2.svg", "step9SVG", "graphic");
     if (!step9Container) {
       console.error("❌ Impossible de charger le SVG step9");
       return;
