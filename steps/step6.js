@@ -24,7 +24,7 @@ export async function showStep6() {
 
   // Vérifier ou charger les frames
   if (!frameContainer) {
-    frameContainer = await loadSVG("/svg/step6_frame.svg", "step6FrameSVG", "graphic");
+    frameContainer = await loadSVG("./svg/step6_frame.svg", "step6FrameSVG", "graphic");
   }
   if (!frameContainer) {
     console.error("❌ Impossible de charger le SVG step6_frame");
