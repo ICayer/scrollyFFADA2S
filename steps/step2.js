@@ -21,7 +21,7 @@ export async function showStep2() {
 
   // Charger le SVG step2 si pas déjà chargé
   if (!step2Container) {
-    step2Container = await loadSVG("/svg/step2_lune.svg", "step2SVG", "graphic");
+    step2Container = await loadSVG("./svg/step2_lune.svg", "step2SVG", "graphic");
     if (!step2Container) {
       console.error("❌ Impossible de charger step2Container");
       return;
