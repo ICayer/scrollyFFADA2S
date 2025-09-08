@@ -23,7 +23,7 @@ export async function showStep5() {
 
   // Charger et afficher le SVG step5_nature
   if (!step5Container) {
-    step5Container = await loadSVG("/svg/step5_femme_nature.svg", "step5SVG", "graphic");
+    step5Container = await loadSVG("./svg/step5_femme_nature.svg", "step5SVG", "graphic");
     if (!step5Container) {
       console.error("❌ Impossible de charger le SVG step5");
       return;
