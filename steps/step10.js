@@ -23,7 +23,7 @@ export async function showStep10() {
 
   // Charger le SVG si pas déjà chargé
   if (!step10Container) {
-    step10Container = await loadSVG("/svg/step10_lune_etoile.svg", "step10SVG", "graphic");
+    step10Container = await loadSVG("./svg/step10_lune_etoile.svg", "step10SVG", "graphic");
     if (!step10Container) {
       console.error("❌ Impossible de charger le SVG step10");
       return;
