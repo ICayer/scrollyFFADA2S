@@ -14,7 +14,7 @@ export async function showStep0() {
 
   // Charger le logo TAC uniquement si pas déjà chargé
   if (!step0Container) {
-    step0Container = await loadSVG("/svg/step0_logoTAC.svg", "step0SVG", "graphic");
+    step0Container = await loadSVG("./svg/step0_logoTAC.svg", "step0SVG", "graphic");
     if (!step0Container) {
       console.error("❌ Impossible de charger step0Container");
       return;

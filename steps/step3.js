@@ -22,7 +22,7 @@ export async function showStep3() {
 
   // Charger le SVG si pas déjà présent
   if (!step3Container) {
-    step3Container = await loadSVG("./svg/step3_etoile_tete_commune2.svg", "step3SVG", "graphic");
+    step3Container = await loadSVG("/svg/step3_etoile_tete_commune.svg", "step3SVG", "graphic");
     if (!step3Container) {
       console.error("❌ Impossible de charger le SVG step3");
       return;
