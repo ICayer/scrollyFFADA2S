@@ -1,0 +1,74 @@
+/* Fond général */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #0d0d0d;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+/* Zone graphique occupe toute la page */
+#graphic {
+  position: fixed;   /* fixe pour toujours occuper tout l’écran */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+  background: rgb(0, 0, 0);
+  overflow: hidden;
+}
+
+/* Container des steps = overlay par-dessus */
+.steps-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Chaque step occupe une hauteur d’écran entière */
+.step {
+  position: relative;
+  min-height: 100vh;       /* chaque step défile sur un écran entier */
+  display: flex;
+  align-items: flex-end;   /* contenu aligné en bas */
+  justify-content: center; /* centré horizontalement */
+  pointer-events: none;
+}
+
+/* Encadré de texte */
+.step .content {
+  width: 60%;
+  max-width: 1000px;
+  margin-bottom: 5vh;      /* place le bloc dans le dernier quart */
+  padding: 20px;
+  background: rgba(40, 39, 39, 0.7);
+  border-radius: 0px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20vh);  /* commence plus bas */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: auto;
+}
+
+/* Step actif : texte centré visible */
+.step.active .content {
+  opacity: 1;
+  transform: translateY(-2vh); /* se déplace vers le centre de l’écran */
+}
+
+/* Step inactif */
+.step:not(.active) .content {
+  opacity: 0;
+  transform: translateY(20vh); /* reste en bas */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .step .content {
+    width: 90%;
+    font-size: 18px;
+  }
+}
