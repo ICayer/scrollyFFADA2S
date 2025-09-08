@@ -21,7 +21,7 @@ export async function showStep1() {
 
   // Charger le SVG step1 si pas déjà chargé
   if (!step1Container) {
-    step1Container = await loadSVG("/svg/step1_logoTAC.svg", "step1SVG", "graphic");
+    step1Container = await loadSVG("./svg/step1_logoTAC.svg", "step1SVG", "graphic");
     if (!step1Container) {
       console.error("❌ Impossible de charger step1Container");
       return Promise.reject("SVG non chargé");
