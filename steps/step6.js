@@ -55,7 +55,7 @@ export async function showStep6() {
 
   // Vérifier ou charger le SVG commun
   if (!communeContainer) {
-    communeContainer = await loadSVG("/svg/step6_commune.svg", "step6CommuneSVG", "graphic");
+    communeContainer = await loadSVG("./svg/step6_commune.svg", "step6CommuneSVG", "graphic");
   }
   if (!communeContainer) {
     console.error("❌ Impossible de charger le SVG step6_commune");
