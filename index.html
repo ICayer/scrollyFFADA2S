@@ -4,60 +4,116 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scrollytelling avec D3.js et GSAP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fascinate&family=Playwrite+US+Modern:wght@100..400&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MotionPathPlugin.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MorphSVGPlugin.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MotionPathPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MorphSVGPlugin.min.js"></script>
 
     <script src="https://unpkg.com/scrollama"></script>
     <script src="https://unpkg.com/flubber"></script>
+    <base href="https://icayer.github.io/scrollyFFADA2S/">
   </head>
 
   <body>
     <main>
       <div id="graphic"></div>
-        <div id="image-container"></div>
+      <div id="image-container"></div>
       <section id="scrolly">
         <div class="steps-container">
           <!-- 14 steps exactement -->
           <div class="step" data-step="1">
-            <div class="content">Texte étape 1</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>L’humain et son territoire.</p>
+            </div>
           </div>
           <div class="step" data-step="2">
-            <div class="content">Texte étape 2</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>La lune, symbole de féminité.</p>
+            </div>
           </div>
           <div class="step" data-step="3">
-            <div class="content">Texte étape 3</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>
+                La lune se personnifie, nous rencontrons les femmes, les filles
+                et les personnes bispirituelles.
+              </p>
+            </div>
           </div>
           <div class="step" data-step="4">
-            <div class="content">Texte étape 4</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>
+                Et certaines d’entre elles sont des femmes autochtones. Les
+                étoiles se transforment en perlage.
+              </p>
+            </div>
           </div>
           <div class="step" data-step="5">
-            <div class="content">Texte étape 5</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>
+                Les femmes et leurs rôles dans la communauté (culture, soins,
+                éducation, création). Exprimer le beau, le positif.
+              </p>
+            </div>
           </div>
           <div class="step" data-step="6">
-            <div class="content">Texte étape 6</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>Les femmes autochtones, liant de leur communauté.</p>
+            </div>
           </div>
           <div class="step" data-step="7">
-            <div class="content">Texte étape 7</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>
+                Les femmes, les filles et les personnes bispirituelles
+                disparu·es et assassiné·es, 6 fois plus que dans la population
+                allochtone.
+              </p>
+            </div>
           </div>
           <div class="step" data-step="8">
-            <div class="content">Texte étape 8</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>
+                Exprimer d’où vient cette spirale : violence de la colonisation
+                - perte d’identité - pauvreté - racisme - violence.
+              </p>
+            </div>
           </div>
           <div class="step" data-step="9">
-            <div class="content">Texte étape 9</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>
+                La réalité des personnes survivant·es, porteur·ses de la
+                mémoire.
+              </p>
+            </div>
           </div>
           <div class="step" data-step="10">
-            <div class="content">Texte étape 10</div>
+            <div class="content">
+              <h2>Intention</h2>
+              <p>
+                Les femmes, les filles et les personnes bispirituelles sont gardien·nes de la mémoire, de la culture,
+                créateur·trice et solidaire.
+              </p>
+            </div>
           </div>
           <!-- <div class="step" data-step="11">Texte étape 11</div> -->
           <!-- <div class="step" data-step="12">Texte étape 12</div> -->
           <!-- <div class="step" data-step="13">Texte étape 13</div> -->
           <!-- <div class="step" data-step="14">Texte étape 14</div> -->
-
-
         </div>
       </section>
     </main>

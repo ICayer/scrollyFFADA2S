@@ -25,7 +25,7 @@ export async function showStep4() {
   }
 
   if (!step4Container) {
-    step4Container = await loadSVG("/svg/step4_etoile_robe_perle2.svg", "step4SVG", "graphic");
+    step4Container = await loadSVG("./svg/step4_etoile_robe_perle2.svg", "step4SVG", "graphic");
     if (!step4Container) {
       console.error("❌ Impossible de charger step4Container");
       return Promise.reject("SVG non chargé");
@@ -181,26 +181,25 @@ export async function showStep4() {
 
   step4Timeline.call(() => console.log("🔄 Restauration des étoiles originales - DÉBUT"), null, null, "+=0.5");
 
-  stars.forEach((star, i) => {
-    const data = originalStarsData[i];
-
-    step4Timeline.call(() => {
+  // ✅ Nouvelle logique : restauration immédiate puis fade-in global
+  step4Timeline.call(() => {
+    stars.forEach((star, i) => {
+      const data = originalStarsData[i];
       star.setAttribute("cx", data.cx);
       star.setAttribute("cy", data.cy);
       star.setAttribute("r", data.r);
       star.setAttribute("fill", data.fill);
-      // 🔑 Supprimer le style forcé par GSAP pour restaurer la couleur originale
       star.style.fill = "";
       gsap.set(star, { opacity: 0, visibility: "visible" });
-      console.log(`⭐ Restauration étoile ${i} → fill restauré: ${data.fill}`);
-    }, null, null, i === 0 ? ">+0.2" : `<+0.01`);
+    });
+    console.log("⭐ Restauration des étoiles originales effectuée");
+  }, null, null, ">+0.2");
 
-    step4Timeline.to(star, {
-      duration: 0.3,
-      opacity: 1,
-      ease: "power2.out",
-      onComplete: () => console.log(`✅ Étoile ${i} réapparue`)
-    }, "<");
+  step4Timeline.to(stars, {
+    duration: 2,
+    opacity: 1,
+    ease: "power2.out",
+    onStart: () => console.log("🌟 Fade-in global des étoiles")
   });
 
   step4Timeline.call(() => console.log("🎬 Toutes les étoiles originales sont réapparues"));

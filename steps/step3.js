@@ -22,7 +22,7 @@ export async function showStep3() {
 
   // Charger le SVG si pas déjà présent
   if (!step3Container) {
-    step3Container = await loadSVG("/svg/step3_etoile_tete_commune.svg", "step3SVG", "graphic");
+    step3Container = await loadSVG("./svg/step3_etoile_tete_commune2.svg", "step3SVG", "graphic");
     if (!step3Container) {
       console.error("❌ Impossible de charger le SVG step3");
       return;
@@ -41,7 +41,7 @@ export async function showStep3() {
   // Récupérer les éléments spécifiques
   const communaute = step3Container.querySelector("#step3Communaute");
   const etoiles = step3Container.querySelectorAll('circle[id^="step3Etoile"]');
-  const tetes = step3Container.querySelectorAll('path[id^="step3Tete"]');
+  const tetes = step3Container.querySelectorAll('g[id^="step3Tete"]');
 
   console.log("🎯 Éléments trouvés:", { 
     communaute, 
@@ -61,7 +61,7 @@ export async function showStep3() {
       generatedGroup.setAttribute("id", "generatedStars");
       svg.insertBefore(generatedGroup, svg.firstChild);
 
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 300; i++) {
         const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         const x = Math.random() * 800;
         const y = Math.random() * 600;
@@ -124,7 +124,7 @@ export async function showStep3() {
         try {
           const bbox = tete.getBBox();
           step3Timeline.to(star, {
-            duration: 0.5,
+            duration: 2,
             attr: { 
               cx: bbox.x + bbox.width / 2, 
               cy: bbox.y + bbox.height / 2, 
@@ -135,7 +135,7 @@ export async function showStep3() {
               gsap.set(tete, { opacity: 1, visibility: "visible" });
               gsap.set(star, { opacity: 0 });
             },
-          }, `tetes+=${i * 0.05}`);
+          }, `tetes+=${i * 0.6}`);
         } catch (e) {
           console.warn("⚠️ Impossible de récupérer bbox pour tête", i, e);
         }

@@ -21,7 +21,7 @@ export async function showStep9() {
   isStep9Active = true;
 
   if (!step9Container) {
-    step9Container = await loadSVG("/svg/step9_coeur2.svg", "step9SVG", "graphic");
+    step9Container = await loadSVG("./svg/step9_coeur2.svg", "step9SVG", "graphic");
     if (!step9Container) {
       console.error("❌ Impossible de charger le SVG step9");
       return;
@@ -141,6 +141,7 @@ export async function showStep9() {
           duration: 5,
           x: dx,
           y: dy,
+          fill:"#eadd42",
           ease: "power2.inOut",
           onComplete: () => {
             if (idx === cerclesDebut.length - 1) {

@@ -8,6 +8,23 @@ body {
   font-family: Arial, sans-serif;
 }
 
+h2 {
+  font-family: "Playwrite US Modern", cursive;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+color:#eadd42;
+}
+
+p {
+  font-family: "Playwrite US Modern", cursive;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+color:white;
+font-size: 18px;
+}
+
 /* Zone graphique occupe toute la page */
 #graphic {
   position: fixed;   /* fixe pour toujours occuper tout l’écran */
@@ -41,9 +58,9 @@ body {
   width: 60%;
   max-width: 1000px;
   margin-bottom: 5vh;      /* place le bloc dans le dernier quart */
-  padding: 20px;
-  background: rgba(40, 39, 39, 0.7);
-  border-radius: 0px;
+  padding: 10px;
+  background: rgba(22, 22, 22, 0.88);
+  border-radius: 30px;
   font-size: 18px;
   font-weight: bold;
   text-align: center;

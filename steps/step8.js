@@ -23,7 +23,7 @@ export async function showStep8() {
 
   // Charger le SVG si pas déjà chargé
   if (!step8Container) {
-    step8Container = await loadSVG("/svg/step8_spirale.svg", "step8SVG", "graphic");
+    step8Container = await loadSVG("./svg/step8_spirale.svg", "step8SVG", "graphic");
     if (!step8Container) {
       console.error("❌ Impossible de charger le SVG step8");
       return;

@@ -24,7 +24,7 @@ export async function showStep6() {
 
   // Vérifier ou charger les frames
   if (!frameContainer) {
-    frameContainer = await loadSVG("/svg/step6_frame.svg", "step6FrameSVG", "graphic");
+    frameContainer = await loadSVG("./svg/step6_frame.svg", "step6FrameSVG", "graphic");
   }
   if (!frameContainer) {
     console.error("❌ Impossible de charger le SVG step6_frame");
@@ -55,7 +55,7 @@ export async function showStep6() {
 
   // Vérifier ou charger le SVG commun
   if (!communeContainer) {
-    communeContainer = await loadSVG("/svg/step6_commune.svg", "step6CommuneSVG", "graphic");
+    communeContainer = await loadSVG("./svg/step6_commune.svg", "step6CommuneSVG", "graphic");
   }
   if (!communeContainer) {
     console.error("❌ Impossible de charger le SVG step6_commune");

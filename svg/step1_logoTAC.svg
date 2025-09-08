@@ -1244,28 +1244,28 @@
     <path d="M304.07,160.28s-.01-.1,0-.15c.01.05.03.1,0,.15Z" style="fill: #9c9f98;"/>
   </g>
   <g id="step1Etoile">
-    <circle cx="216.77" cy="101.53" r=".67" style="fill: #eadd42;"/>
-    <circle cx="237.7" cy="92.99" r=".67" style="fill: #eadd42;"/>
-    <circle cx="249.35" cy="104.83" r="1.6" style="fill: #eadd42;"/>
-    <circle cx="278.41" cy="90.7" r=".9" style="fill: #eadd42;"/>
-    <circle cx="283.29" cy="103.65" r="1.6" style="fill: #eadd42;"/>
-    <circle cx="229.01" cy="101.22" r="1.6" style="fill: #eadd42;"/>
-    <circle cx="249.28" cy="94.21" r=".9" style="fill: #eadd42;"/>
-    <circle cx="305.36" cy="98.78" r="1.6" style="fill: #eadd42;"/>
-    <circle cx="235.44" cy="99.35" r="1.28" style="fill: #eadd42;"/>
-    <circle cx="248.08" cy="99.88" r="1.43" style="fill: #eadd42;"/>
-    <circle cx="255.99" cy="101.05" r="1.02" style="fill: #eadd42;"/>
-    <circle cx="278" cy="98.25" r="1.31" style="fill: #eadd42;"/>
-    <circle cx="221.35" cy="102.54" r="1.31" style="fill: #eadd42;"/>
-    <circle cx="255.99" cy="94.85" r="1.31" transform="translate(121.36 332.34) rotate(-80.78)" style="fill: #eadd42;"/>
-    <circle cx="297.16" cy="100.4" r="1.31" style="fill: #eadd42;"/>
-    <circle cx="243.56" cy="99.54" r="1.31" style="fill: #eadd42;"/>
-    <circle cx="242.76" cy="96.18" r=".67" style="fill: #eadd42;"/>
-    <circle cx="270.23" cy="89.77" r=".67" style="fill: #eadd42;"/>
-    <circle cx="293.05" cy="93.52" r=".67" style="fill: #eadd42;"/>
-    <circle cx="285.88" cy="95.41" r=".67" style="fill: #eadd42;"/>
-    <circle cx="309.47" cy="105.01" r=".67" style="fill: #eadd42;"/>
-    <circle cx="256.34" cy="90.7" r=".67" style="fill: #eadd42;"/>
+    <circle cx="216.77" cy="101.53" r=".4" style="fill: #eadd42;"/>
+    <circle cx="237.7" cy="92.99" r=".4" style="fill: #eadd42;"/>
+    <circle cx="249.35" cy="104.83" r=".96" style="fill: #eadd42;"/>
+    <circle cx="278.41" cy="90.7" r=".54" style="fill: #eadd42;"/>
+    <circle cx="283.29" cy="103.65" r=".96" style="fill: #eadd42;"/>
+    <circle cx="229.01" cy="101.22" r=".96" style="fill: #eadd42;"/>
+    <circle cx="249.28" cy="94.21" r=".54" style="fill: #eadd42;"/>
+    <circle cx="305.36" cy="98.78" r=".96" style="fill: #eadd42;"/>
+    <circle cx="235.44" cy="99.35" r=".77" style="fill: #eadd42;"/>
+    <circle cx="248.08" cy="99.88" r=".86" style="fill: #eadd42;"/>
+    <circle cx="255.99" cy="101.05" r=".61" style="fill: #eadd42;"/>
+    <circle cx="278" cy="98.25" r=".79" style="fill: #eadd42;"/>
+    <circle cx="221.35" cy="102.54" r=".79" style="fill: #eadd42;"/>
+    <circle cx="255.99" cy="94.85" r=".79" style="fill: #eadd42;"/>
+    <circle cx="297.16" cy="100.4" r=".79" style="fill: #eadd42;"/>
+    <circle cx="243.56" cy="99.54" r=".79" style="fill: #eadd42;"/>
+    <circle cx="242.76" cy="96.18" r=".4" style="fill: #eadd42;"/>
+    <circle cx="270.23" cy="89.77" r=".4" style="fill: #eadd42;"/>
+    <circle cx="293.05" cy="93.52" r=".4" style="fill: #eadd42;"/>
+    <circle cx="285.88" cy="95.41" r=".4" style="fill: #eadd42;"/>
+    <circle cx="309.47" cy="105.01" r=".4" style="fill: #eadd42;"/>
+    <circle cx="256.34" cy="90.7" r=".4" style="fill: #eadd42;"/>
   </g>
   <g id="step1luneDebut">
     <path d="M261.82,95.87c.17-.23,2.7-1.61,1.91-.95-1.2.44-2.19,1.27-2.91,2.25-.06.16-.27.32-.21.5,0,.07-.02.13-.09.17-.01.17-.21.29-.22.51.08.08-.07.57-.11.32-.24,1.96.08,4.07,1.41,5.62-2.21-2.09-2.35-6.49.23-8.41Z" style="fill: #3b3b37;"/>
