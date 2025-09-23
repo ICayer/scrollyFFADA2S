@@ -80,18 +80,19 @@ export async function showStep9() {
   const stripesEls = stripes.map(sel => step9Container.querySelector(sel)).filter(Boolean);
   const femmeEl = step9Container.querySelector("#step9Femme");
 
-step9Timeline.to({}, { 
-  duration: 3, 
-  onStart: () => console.log("⏸ Pause de 3 secondes avant animations")
-}, 0);
+// Pause de 3 secondes avant les animations
+  step9Timeline.to({}, { 
+    duration: 5, 
+    onStart: () => console.log("⏸ Pause de 3 secondes avant animations")
+  });
 
-  if (stripesEls.length) {
+   if (stripesEls.length) {
     step9Timeline.to(stripesEls, { 
       opacity: 1, 
       duration: 2,
       ease: "power2.out",
       onStart: () => console.log("📺 Stripes fade-in")
-    }, 0);
+    });
   }
 
   if (femmeEl) {
@@ -100,11 +101,10 @@ step9Timeline.to({}, {
       duration: 2,
       ease: "power2.out",
       onStart: () => console.log("📻 Femme fade-out")
-    }, 0);
+    }, "<"); // Commence en même temps que stripes fade-in
   }
 
   step9Timeline.to({}, { duration: 1, onStart: () => console.log("⏸ Pause 1s avant morphing") });
-
   stripes.forEach((stripeSel, idx) => {
     const stripe = step9Container.querySelector(stripeSel);
     const coeur = step9Container.querySelector(coeurs[idx]);

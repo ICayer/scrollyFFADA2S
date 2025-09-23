@@ -24,7 +24,7 @@ export async function showStep6() {
 
   // Vérifier ou charger les frames
   if (!frameContainer) {
-    frameContainer = await loadSVG("./svg/step6_frame2.svg", "step6FrameSVG", "graphic");
+    frameContainer = await loadSVG("./svg/step6_frame.svg", "step6FrameSVG", "graphic");
   }
   if (!frameContainer) {
     console.error("❌ Impossible de charger le SVG step6_frame");
@@ -109,25 +109,33 @@ export async function showStep6() {
       }, "<");
     }
   }
-  if (frames[4]) {
-    tl.to(frames[4], {
-      opacity: 0,
-      duration: 1.5,
-      onStart: () => console.log("📻 Frame5 fade-out (fin des frames)")
-    });
-  }
+  // ⚠️ SUPPRIMÉ : Le fade-out de frame5 qui créait le vide visuel
+// if (frames[4]) {
+//   tl.to(frames[4], {
+//     opacity: 0,
+//     duration: 1.5,
+//     onStart: () => console.log("🔻 Frame5 fade-out (fin des frames)")
+//   });
+// }
 
-  // Pause
-  tl.to({}, { duration: 1, onStart: () => console.log("⏸ Pause 1s avant sol") });
+// ⚠️ SUPPRIMÉ : La pause qui créait un délai inutile
+// tl.to({}, { duration: 1, onStart: () => console.log("⏸ Pause 1s avant sol") });
 
-  // Sol
-  if (sol) {
-    tl.to(sol, {
-      opacity: 1,
-      duration: 1,
-      onStart: () => console.log("🌍 Sol visible")
-    });
-  }
+// Sol apparaît en même temps que frame5 disparaît (transition fluide)
+if (sol && frames[4]) {
+  tl.to(sol, {
+    opacity: 1,
+    duration: 1,
+    onStart: () => console.log("🌍 Sol visible")
+  });
+  
+  // Frame5 disparaît EN MÊME TEMPS que sol apparaît
+  tl.to(frames[4], {
+    opacity: 0,
+    duration: 1,
+    onStart: () => console.log("🔻 Frame5 fade-out simultané avec sol")
+  }, "<"); // Le "<" fait que cette animation commence en même temps que la précédente
+}
 
   // Persos un par un
   persos.forEach((perso, idx) => {
