@@ -73,18 +73,19 @@ export function hideStep5({ soft = false } = {}) {
         onComplete: resolve
       });
     } else {
-      // Reset complet
+      // Reset complet avec destruction du DOM
       gsap.to(step5Container, {
         opacity: 0,
         duration: 0.5,
         ease: "power2.out",
         onComplete: () => {
-          gsap.set(step5Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step5 complètement nettoyé");
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step5Container && step5Container.parentNode) {
+            step5Container.parentNode.removeChild(step5Container);
+          }
+          step5Container = null;
+
+          console.log("🧹 Step5 complètement détruit");
           resolve();
         }
       });

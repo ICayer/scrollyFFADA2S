@@ -145,26 +145,19 @@ export function hideStep1({ soft = false } = {}) {
         onComplete: resolve
       });
     } else {
-      // Reset complet avec nettoyage
+      // Reset complet avec destruction du DOM
       gsap.to(step1Container, {
         opacity: 0,
         duration: 0.5,
         ease: "power2.out",
         onComplete: () => {
-          // Reset tous les éléments SVG
-          const allEls = step1Container.querySelectorAll("g, path, rect, circle");
-          gsap.set(allEls, { 
-            opacity: 0, 
-            visibility: "hidden",
-            clearProps: "all" 
-          });
-          
-          gsap.set(step1Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step1 complètement nettoyé");
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step1Container && step1Container.parentNode) {
+            step1Container.parentNode.removeChild(step1Container);
+          }
+          step1Container = null;
+
+          console.log("🧹 Step1 complètement détruit");
           resolve();
         }
       });

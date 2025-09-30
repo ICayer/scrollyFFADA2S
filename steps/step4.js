@@ -228,61 +228,24 @@ export function hideStep4({ soft = false } = {}) {
         onComplete: resolve
       });
     } else {
+      // Reset complet avec destruction du DOM
       gsap.to(step4Container, {
         opacity: 0,
         duration: 0.5,
         ease: "power2.out",
         onComplete: () => {
-          if (animationGroup) {
-            animationGroup.remove();
-            animationGroup = null;
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step4Container && step4Container.parentNode) {
+            step4Container.parentNode.removeChild(step4Container);
           }
-
-          if (stars.length && originalStarsData.length) {
-            stars.forEach((star, i) => {
-              const data = originalStarsData[i];
-              if (data && star) {
-                gsap.set(star, {
-                  opacity: 0,
-                  visibility: "hidden",
-                  attr: {
-                    cx: data.cx,
-                    cy: data.cy, 
-                    r: data.r,
-                    fill: data.fill
-                  },
-                  clearProps: "transform,x,y"
-                });
-              }
-            });
-          }
-
-          if (pearls.length) {
-            gsap.set(pearls, { 
-              opacity: 0,
-              visibility: "hidden",
-              clearProps: "all"
-            });
-          }
-
-          if (luneFemme) {
-            gsap.set(luneFemme, { 
-              opacity: 0,
-              visibility: "hidden"
-            });
-          }
-
+          step4Container = null;
+          animationGroup = null;
           stars = [];
           pearls = [];
           luneFemme = null;
           originalStarsData = [];
 
-          gsap.set(step4Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step4 complètement nettoyé");
+          console.log("🧹 Step4 complètement détruit");
           resolve();
         }
       });

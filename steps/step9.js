@@ -178,52 +178,20 @@ export function hideStep9({ soft = false } = {}) {
     if (soft) {
       gsap.to(step9Container, { opacity: 0, duration: 0.3, ease: "power2.out", onComplete: resolve });
     } else {
+      // Reset complet avec destruction du DOM
       gsap.to(step9Container, {
         opacity: 0,
         duration: 0.5,
         ease: "power2.out",
         onComplete: () => {
-          const initialEls = ["#step9Lune", "#step9Famille", "#step9Femme"];
-          const stripes = ["#stripe1", "#stripe2", "#stripe3"];
-          const coeurs = ["#coeur1", "#coeur2", "#coeur3"];
-
-          // reset stripes avec d original
-          stripes.forEach(sel => {
-            const el = step9Container.querySelector(sel);
-            if (el) {
-              if (originalStripesD[sel]) el.setAttribute("d", originalStripesD[sel]);
-              gsap.set(el, { opacity: 0, visibility: "visible", x: 0, y: 0 });
-            }
-          });
-
-          // reset coeurs cachés
-          coeurs.forEach(sel => {
-            const el = step9Container.querySelector(sel);
-            if (el) gsap.set(el, { opacity: 0, visibility: "hidden" });
-          });
-
-          // reset etoileDebut (prêt à réapparaître)
-          const etoileDebutEl = step9Container.querySelector("#etoileDebut");
-          if (etoileDebutEl) {
-            gsap.set(etoileDebutEl, { opacity: 0, visibility: "visible" });
-            const circles = etoileDebutEl.querySelectorAll("circle");
-            gsap.set(circles, { x: 0, y: 0, opacity: 0, visibility: "visible" });
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step9Container && step9Container.parentNode) {
+            step9Container.parentNode.removeChild(step9Container);
           }
+          step9Container = null;
+          originalStripesD = {};
 
-          // reset etoileFin (caché)
-          const etoileFinEl = step9Container.querySelector("#etoileFin");
-          if (etoileFinEl) {
-            gsap.set(etoileFinEl, { opacity: 0, visibility: "hidden" });
-          }
-
-          // reset initiaux
-          initialEls.forEach(sel => {
-            const el = step9Container.querySelector(sel);
-            if (el) gsap.set(el, { opacity: 1, visibility: "visible" });
-          });
-
-          gsap.set(step9Container, { display: "none", pointerEvents: "none" });
-          console.log("🧹 Step9 complètement nettoyé");
+          console.log("🧹 Step9 complètement détruit");
           resolve();
         }
       });

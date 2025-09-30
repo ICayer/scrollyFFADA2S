@@ -191,7 +191,7 @@ export function hideStep6({ soft = false } = {}) {
       }));
     }
   } else {
-    // Reset complet
+    // Reset complet avec destruction du DOM
     if (frameContainer) {
       promises.push(new Promise(resolve => {
         gsap.to(frameContainer, {
@@ -199,20 +199,13 @@ export function hideStep6({ soft = false } = {}) {
           duration: 0.5,
           ease: "power2.out",
           onComplete: () => {
-            // Reset tous les frames
-            const allFrames = frameContainer.querySelectorAll("[id^='frame']");
-            gsap.set(allFrames, { 
-              opacity: 0, 
-              visibility: "hidden",
-              clearProps: "all" 
-            });
-            
-            gsap.set(frameContainer, { 
-              display: "none",
-              pointerEvents: "none"
-            });
-            
-            console.log("🧹 Frames complètement nettoyées");
+            // Détruire complètement le conteneur pour éviter les IDs dupliqués
+            if (frameContainer && frameContainer.parentNode) {
+              frameContainer.parentNode.removeChild(frameContainer);
+            }
+            frameContainer = null;
+
+            console.log("🧹 Frames complètement détruites");
             resolve();
           }
         });
@@ -226,30 +219,13 @@ export function hideStep6({ soft = false } = {}) {
           duration: 0.5,
           ease: "power2.out",
           onComplete: () => {
-            // Reset sol et persos
-            const sol = communeContainer.querySelector("#step6Sol");
-            const allPersos = communeContainer.querySelectorAll("[id^='step6Perso']");
-            
-            if (sol) {
-              gsap.set(sol, { 
-                opacity: 0, 
-                visibility: "hidden",
-                clearProps: "all" 
-              });
+            // Détruire complètement le conteneur pour éviter les IDs dupliqués
+            if (communeContainer && communeContainer.parentNode) {
+              communeContainer.parentNode.removeChild(communeContainer);
             }
-            
-            gsap.set(allPersos, { 
-              opacity: 0, 
-              visibility: "hidden",
-              clearProps: "all" 
-            });
-            
-            gsap.set(communeContainer, { 
-              display: "none",
-              pointerEvents: "none"
-            });
-            
-            console.log("🧹 Sol + persos complètement nettoyés");
+            communeContainer = null;
+
+            console.log("🧹 Commune complètement détruite");
             resolve();
           }
         });

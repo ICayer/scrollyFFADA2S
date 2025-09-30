@@ -210,59 +210,19 @@ export function hideStep10({ soft = false } = {}) {
         onComplete: resolve
       });
     } else {
-      // Reset complet
+      // Reset complet avec destruction du DOM
       gsap.to(step10Container, {
         opacity: 0,
         duration: 0.5,
         ease: "power2.out",
         onComplete: () => {
-          // Reset spécifique de tous les éléments step10
-          const initialEls = ["#step10Sol", "#step10Famille", "#step10Coeur"];
-          const specialEls = ["#step10Lune", "#step10PleineLune", "#step10Communaute"];
-          const allStaticEls = [...initialEls, ...specialEls];
-          
-          // Reset éléments statiques
-          allStaticEls.forEach(sel => {
-            const el = step10Container.querySelector(sel);
-            if (el) {
-              gsap.set(el, { 
-                opacity: 0, 
-                visibility: "hidden",
-                clearProps: "all" 
-              });
-            }
-          });
-
-          // Reset des 67 étoiles (début et fin)
-          for (let i = 1; i <= 67; i++) {
-            const etoileDebut = step10Container.querySelector(`#etoileDebut${i}`);
-            const etoileFin = step10Container.querySelector(`#etoileFin${i}`);
-            
-            if (etoileDebut) {
-              gsap.set(etoileDebut, { 
-                opacity: 0, 
-                visibility: "hidden",
-                x: 0, 
-                y: 0,
-                clearProps: "all" 
-              });
-            }
-            
-            if (etoileFin) {
-              gsap.set(etoileFin, { 
-                opacity: 0, 
-                visibility: "hidden",
-                clearProps: "all" 
-              });
-            }
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step10Container && step10Container.parentNode) {
+            step10Container.parentNode.removeChild(step10Container);
           }
+          step10Container = null;
 
-          gsap.set(step10Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step10 complètement nettoyé");
+          console.log("🧹 Step10 complètement détruit");
           resolve();
         }
       });

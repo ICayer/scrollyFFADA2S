@@ -178,34 +178,20 @@ export function hideStep3({ soft = false } = {}) {
         onComplete: resolve
       });
     } else {
-      // Reset complet
+      // Reset complet avec destruction du DOM
       gsap.to(step3Container, {
         opacity: 0,
         duration: 0.5,
         ease: "power2.out",
         onComplete: () => {
-          // Reset tous les éléments SVG
-          const allEls = step3Container.querySelectorAll("g, path, rect, circle");
-          gsap.set(allEls, { 
-            opacity: 0, 
-            visibility: "hidden",
-            clearProps: "all" 
-          });
-
-          // Nettoyer le groupe d'étoiles générées
-          if (generatedGroup) {
-            gsap.set(generatedGroup.querySelectorAll("circle"), { 
-              opacity: 0,
-              visibility: "hidden"
-            });
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step3Container && step3Container.parentNode) {
+            step3Container.parentNode.removeChild(step3Container);
           }
-          
-          gsap.set(step3Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step3 complètement nettoyé");
+          step3Container = null;
+          generatedGroup = null;
+
+          console.log("🧹 Step3 complètement détruit");
           resolve();
         }
       });
