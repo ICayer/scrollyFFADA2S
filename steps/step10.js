@@ -202,12 +202,65 @@ export function hideStep10({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      // Fade out rapide sans reset complet
-      gsap.to(step10Container, { 
-        opacity: 0, 
+      // Fade out rapide avec reset complet des éléments
+      gsap.to(step10Container, {
+        opacity: 0,
         duration: 0.3,
         ease: "power2.out",
-        onComplete: resolve
+        onComplete: () => {
+          const initialEls = ["#step10Sol", "#step10Famille", "#step10Coeur"];
+          const specialEls = ["#step10Lune", "#step10PleineLune", "#step10Communaute"];
+
+          // Reset éléments spéciaux (cachés)
+          specialEls.forEach(sel => {
+            const el = step10Container.querySelector(sel);
+            if (el) {
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            }
+          });
+
+          // Reset éléments initiaux (visibles)
+          initialEls.forEach(sel => {
+            const el = step10Container.querySelector(sel);
+            if (el) {
+              gsap.set(el, {
+                opacity: 1,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            }
+          });
+
+          // Reset des 67 étoiles (début et fin)
+          for (let i = 1; i <= 67; i++) {
+            const etoileDebut = step10Container.querySelector(`#etoileDebut${i}`);
+            const etoileFin = step10Container.querySelector(`#etoileFin${i}`);
+
+            if (etoileDebut) {
+              gsap.set(etoileDebut, {
+                opacity: 0,
+                visibility: "visible",
+                x: 0,
+                y: 0,
+                clearProps: "transform"
+              });
+            }
+
+            if (etoileFin) {
+              gsap.set(etoileFin, {
+                opacity: 0,
+                visibility: "hidden"
+              });
+            }
+          }
+
+          console.log("🧹 Step10 réinitialisé en mode soft (67 étoiles)");
+          resolve();
+        }
       });
     } else {
       // Reset complet avec destruction du DOM

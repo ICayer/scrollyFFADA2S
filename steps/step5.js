@@ -30,22 +30,25 @@ export async function showStep5() {
     }
   }
 
+  // Créer une timeline pour contrôler toutes les animations
+  tl = gsap.timeline({
+    onComplete: () => {
+      console.log("🎬 Animation step5 terminée");
+    }
+  });
+
   if (step5Container) {
     gsap.set(step5Container, { opacity: 0, display: "block", pointerEvents: "auto" });
-    gsap.to(step5Container, { 
-      opacity: 1, 
+
+    // Ajouter le fade-in à la timeline pour pouvoir le tuer si nécessaire
+    tl.to(step5Container, {
+      opacity: 1,
       duration: 1,
-      ease: "power2.out",
-      onComplete: () => {
-        console.log("🎬 Fade-in step5 terminé");
-      }
+      ease: "power2.out"
     });
   }
 
   console.log("🎯 Step5 container chargé et affiché");
-
-  // Pas d'animations spécifiques pour l'instant
-  tl = gsap.timeline();
 }
 
 export function hideStep5({ soft = false } = {}) {
@@ -53,10 +56,15 @@ export function hideStep5({ soft = false } = {}) {
 
   isStep5Active = false;
 
-  // Arrêter l'animation en cours
+  // Arrêter toutes les animations en cours (y compris le fade-in)
   if (tl) {
     tl.kill();
     tl = null;
+  }
+
+  // Tuer aussi toutes les animations GSAP en cours sur le conteneur
+  if (step5Container) {
+    gsap.killTweensOf(step5Container);
   }
 
   if (!step5Container) {

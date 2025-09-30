@@ -4,6 +4,7 @@ let step3Container = null;
 let step3Timeline = null;
 let isStep3Active = false;
 let generatedGroup = null;
+let originalStarsData = []; // Sauvegarder les positions originales des cercles générés
 
 export async function showStep3() {
   console.log("✅ showStep3 déclenché");
@@ -68,6 +69,9 @@ export async function showStep3() {
     generatedGroup.setAttribute("id", "generatedStars");
     svg.insertBefore(generatedGroup, svg.firstChild);
 
+    // Réinitialiser les données originales
+    originalStarsData = [];
+
     for (let i = 0; i < 300; i++) {
       const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       const x = Math.random() * 800;
@@ -80,6 +84,9 @@ export async function showStep3() {
       star.setAttribute("fill", "#eadd42");
       star.setAttribute("opacity", "1");
       generatedGroup.appendChild(star);
+
+      // Sauvegarder les positions originales
+      originalStarsData.push({ cx: x, cy: y, r: r, fill: "#eadd42" });
     }
 
     console.log("🌟 Généré", generatedGroup.children.length, "étoiles");
@@ -176,20 +183,48 @@ export function hideStep3({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      // Fade out rapide avec reset des cercles générés
+      // Fade out rapide avec reset complet des éléments
       gsap.to(step3Container, {
         opacity: 0,
         duration: 0.3,
         ease: "power2.out",
         onComplete: () => {
-          // Reset des cercles générés pour permettre une réactivation propre
-          if (generatedGroup && generatedGroup.parentNode) {
+          // Reset des cercles générés à leurs positions originales
+          if (generatedGroup && generatedGroup.parentNode && originalStarsData.length) {
             const circles = generatedGroup.querySelectorAll("circle");
-            gsap.set(circles, {
-              opacity: 1,
-              clearProps: "transform,x,y,attr"
+            circles.forEach((circle, i) => {
+              const data = originalStarsData[i];
+              if (data) {
+                circle.setAttribute("cx", data.cx);
+                circle.setAttribute("cy", data.cy);
+                circle.setAttribute("r", data.r);
+                circle.setAttribute("fill", data.fill);
+                gsap.set(circle, {
+                  opacity: 1,
+                  visibility: "visible",
+                  clearProps: "transform,x,y"
+                });
+              }
             });
           }
+
+          // Reset des étoiles et têtes du SVG original qui ont été rendues visibles
+          const etoiles = step3Container.querySelectorAll('circle[id^="step3Etoile"]');
+          const tetes = step3Container.querySelectorAll('g[id^="step3Tete"]');
+
+          gsap.set(etoiles, {
+            opacity: 0,
+            visibility: "visible",
+            clearProps: "transform,x,y"
+          });
+
+          gsap.set(tetes, {
+            opacity: 0,
+            visibility: "visible",
+            clearProps: "transform,x,y"
+          });
+
+          console.log("🧹 Step3 nettoyé en mode soft");
           resolve();
         }
       });
@@ -206,6 +241,7 @@ export function hideStep3({ soft = false } = {}) {
           }
           step3Container = null;
           generatedGroup = null;
+          originalStarsData = [];
 
           console.log("🧹 Step3 complètement détruit");
           resolve();

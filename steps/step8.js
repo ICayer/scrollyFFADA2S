@@ -110,12 +110,41 @@ export function hideStep8({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      // Fade out rapide sans reset complet
-      gsap.to(step8Container, { 
-        opacity: 0, 
+      // Fade out rapide avec reset des éléments
+      gsap.to(step8Container, {
+        opacity: 0,
         duration: 0.3,
         ease: "power2.out",
-        onComplete: resolve
+        onComplete: () => {
+          // Reset de la spirale et des stripes à leur état initial (opacity 0)
+          const spirale = step8Container.querySelector("#step8Spirale");
+          const stripes = [
+            "#stripe1", "#stripe2", "#stripe3", "#stripe4", "#stripe5",
+            "#stripe6", "#stripe7", "#stripe8", "#stripe9", "#stripe10"
+          ];
+
+          if (spirale) {
+            gsap.set(spirale, {
+              opacity: 0,
+              visibility: "visible",
+              clearProps: "transform"
+            });
+          }
+
+          stripes.forEach(sel => {
+            const el = step8Container.querySelector(sel);
+            if (el) {
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            }
+          });
+
+          console.log("🧹 Step8 réinitialisé en mode soft");
+          resolve();
+        }
       });
     } else {
       // Reset complet avec destruction du DOM

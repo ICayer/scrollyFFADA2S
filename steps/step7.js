@@ -125,12 +125,39 @@ export function hideStep7({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      // Fade out rapide sans reset complet
-      gsap.to(step7Container, { 
-        opacity: 0, 
+      // Fade out rapide avec reset des éléments
+      gsap.to(step7Container, {
+        opacity: 0,
         duration: 0.3,
         ease: "power2.out",
-        onComplete: resolve
+        onComplete: () => {
+          // Reset de tous les éléments à leur état initial (opacity 0)
+          const initialEls = ["#step7Sol", "#Perso1", "#Perso2", "#Perso3"];
+          const persoEls = [
+            "#Perso4", "#Perso5", "#Perso6", "#Perso7",
+            "#Perso8", "#Perso9", "#Perso10", "#Perso11",
+            "#Perso12", "#Perso13", "#Perso14"
+          ];
+          const stripes = [
+            "#stripe1", "#stripe2", "#stripe3", "#stripe4",
+            "#stripe5", "#stripe6", "#stripe7"
+          ];
+
+          const allEls = [...initialEls, ...persoEls, ...stripes];
+          allEls.forEach(sel => {
+            const el = step7Container.querySelector(sel);
+            if (el) {
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            }
+          });
+
+          console.log("🧹 Step7 réinitialisé en mode soft");
+          resolve();
+        }
       });
     } else {
       // Reset complet avec destruction du DOM

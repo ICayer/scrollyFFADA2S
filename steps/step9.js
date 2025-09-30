@@ -176,7 +176,82 @@ export function hideStep9({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      gsap.to(step9Container, { opacity: 0, duration: 0.3, ease: "power2.out", onComplete: resolve });
+      // Fade out rapide avec reset complet des éléments
+      gsap.to(step9Container, {
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.out",
+        onComplete: () => {
+          const initialEls = ["#step9Lune", "#step9Famille", "#step9Femme"];
+          const stripes = ["#stripe1", "#stripe2", "#stripe3"];
+          const coeurs = ["#coeur1", "#coeur2", "#coeur3"];
+
+          // Reset stripes avec leurs formes originales
+          stripes.forEach(sel => {
+            const el = step9Container.querySelector(sel);
+            if (el && originalStripesD[sel]) {
+              el.setAttribute("d", originalStripesD[sel]);
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform,x,y"
+              });
+            }
+          });
+
+          // Reset coeurs (cachés)
+          coeurs.forEach(sel => {
+            const el = step9Container.querySelector(sel);
+            if (el) {
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "hidden"
+              });
+            }
+          });
+
+          // Reset etoileDebut (caché, cercles repositionnés)
+          const etoileDebutEl = step9Container.querySelector("#etoileDebut");
+          if (etoileDebutEl) {
+            gsap.set(etoileDebutEl, {
+              opacity: 0,
+              visibility: "visible"
+            });
+            const circles = etoileDebutEl.querySelectorAll("circle");
+            circles.forEach(circle => {
+              gsap.set(circle, {
+                x: 0,
+                y: 0,
+                clearProps: "fill"
+              });
+            });
+          }
+
+          // Reset etoileFin (caché)
+          const etoileFinEl = step9Container.querySelector("#etoileFin");
+          if (etoileFinEl) {
+            gsap.set(etoileFinEl, {
+              opacity: 0,
+              visibility: "hidden"
+            });
+          }
+
+          // Reset éléments initiaux (visibles)
+          initialEls.forEach(sel => {
+            const el = step9Container.querySelector(sel);
+            if (el) {
+              gsap.set(el, {
+                opacity: 1,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            }
+          });
+
+          console.log("🧹 Step9 réinitialisé en mode soft");
+          resolve();
+        }
+      });
     } else {
       // Reset complet avec destruction du DOM
       gsap.to(step9Container, {

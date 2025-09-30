@@ -31,12 +31,18 @@ export async function showStep6() {
     return;
   }
 
-  gsap.to(frameContainer, { 
-    opacity: 1, 
-    display: "block", 
-    duration: 0.5,
-    pointerEvents: "auto"
-  });
+  // Vérifier ou charger le SVG commun
+  if (!communeContainer) {
+    communeContainer = await loadSVG("./svg/step6_commune.svg", "step6CommuneSVG", "graphic");
+  }
+  if (!communeContainer) {
+    console.error("❌ Impossible de charger le SVG step6_commune");
+    return;
+  }
+
+  // État initial des conteneurs (cachés)
+  gsap.set(frameContainer, { opacity: 0, display: "block", pointerEvents: "auto" });
+  gsap.set(communeContainer, { opacity: 0, display: "block", pointerEvents: "auto" });
 
   const frames = [
     frameContainer.querySelector("#frame1"),
@@ -53,22 +59,6 @@ export async function showStep6() {
     if (f) gsap.set(f, { opacity: i === 0 ? 1 : 0, display: "block", visibility: "visible" });
   });
 
-  // Vérifier ou charger le SVG commun
-  if (!communeContainer) {
-    communeContainer = await loadSVG("./svg/step6_commune.svg", "step6CommuneSVG", "graphic");
-  }
-  if (!communeContainer) {
-    console.error("❌ Impossible de charger le SVG step6_commune");
-    return;
-  }
-
-  gsap.to(communeContainer, { 
-    opacity: 1, 
-    display: "block", 
-    duration: 0.5,
-    pointerEvents: "auto"
-  });
-
   const sol = communeContainer.querySelector("#step6Sol");
   const persos = [];
   for (let i = 1; i <= 8; i++) {
@@ -80,17 +70,28 @@ export async function showStep6() {
   }
   if (sol) gsap.set(sol, { opacity: 0, display: "block", visibility: "visible" });
 
-  console.log("🎯 Éléments commune trouvés:", { 
-    sol: !!sol, 
-    persos: persos.length 
+  console.log("🎯 Éléments commune trouvés:", {
+    sol: !!sol,
+    persos: persos.length
   });
 
-  // Timeline
+  // Créer la timeline et ajouter les fade-in initiaux
   tl = gsap.timeline({
     onComplete: () => {
       console.log("🎬 Animation step6 terminée");
     }
   });
+
+  // Fade-in des conteneurs au début de la timeline
+  tl.to(frameContainer, {
+    opacity: 1,
+    duration: 0.5
+  }, 0);
+
+  tl.to(communeContainer, {
+    opacity: 1,
+    duration: 0.5
+  }, 0);
 
   // Animation frames
   for (let i = 0; i < frames.length - 1; i++) {
@@ -154,11 +155,19 @@ export function hideStep6({ soft = false } = {}) {
 
   isStep6Active = false;
 
-  // Arrêter l'animation en cours
+  // Arrêter toutes les animations en cours
   if (tl) {
     tl.kill();
     tl = null;
     console.log("🛑 Timeline step6 reset");
+  }
+
+  // Tuer toutes les animations GSAP en cours sur les conteneurs
+  if (frameContainer) {
+    gsap.killTweensOf(frameContainer);
+  }
+  if (communeContainer) {
+    gsap.killTweensOf(communeContainer);
   }
 
   const promises = [];
@@ -168,25 +177,72 @@ export function hideStep6({ soft = false } = {}) {
   }
 
   if (soft) {
-    // Fade out rapide sans reset complet
+    // Fade out rapide avec reset des éléments
     if (frameContainer) {
       promises.push(new Promise(resolve => {
-        gsap.to(frameContainer, { 
-          opacity: 0, 
+        gsap.to(frameContainer, {
+          opacity: 0,
           duration: 0.3,
           ease: "power2.out",
-          onComplete: resolve
+          onComplete: () => {
+            // Reset des frames : seule frame1 visible, autres cachées
+            const frames = [
+              frameContainer.querySelector("#frame1"),
+              frameContainer.querySelector("#frame2"),
+              frameContainer.querySelector("#frame3"),
+              frameContainer.querySelector("#frame4"),
+              frameContainer.querySelector("#frame5"),
+            ];
+            frames.forEach((f, i) => {
+              if (f) {
+                gsap.set(f, {
+                  opacity: i === 0 ? 1 : 0,
+                  visibility: "visible",
+                  clearProps: "transform"
+                });
+              }
+            });
+            console.log("🧹 Frames réinitialisées en mode soft");
+            resolve();
+          }
         });
       }));
     }
 
     if (communeContainer) {
       promises.push(new Promise(resolve => {
-        gsap.to(communeContainer, { 
-          opacity: 0, 
+        gsap.to(communeContainer, {
+          opacity: 0,
           duration: 0.3,
           ease: "power2.out",
-          onComplete: resolve
+          onComplete: () => {
+            // Reset sol et persos
+            const sol = communeContainer.querySelector("#step6Sol");
+            const persos = [];
+            for (let i = 1; i <= 8; i++) {
+              const perso = communeContainer.querySelector(`#step6Perso${i}`);
+              if (perso) persos.push(perso);
+            }
+
+            if (sol) {
+              gsap.set(sol, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            }
+
+            persos.forEach(perso => {
+              gsap.set(perso, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            });
+
+            console.log("🧹 Sol et persos réinitialisés en mode soft");
+            resolve();
+          }
         });
       }));
     }
