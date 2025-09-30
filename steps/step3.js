@@ -4,6 +4,7 @@ let step3Container = null;
 let step3Timeline = null;
 let isStep3Active = false;
 let generatedGroup = null;
+let originalStarsData = []; // Sauvegarder les positions originales des cercles générés
 
 export async function showStep3() {
   console.log("✅ showStep3 déclenché");
@@ -53,30 +54,42 @@ export async function showStep3() {
   gsap.set(etoiles, { opacity: 0, visibility: "visible" });
   gsap.set(tetes, { opacity: 0, visibility: "visible" });
 
-  // Générer les 200 étoiles dans un <g> dédié (seulement si pas déjà fait)
-  if (!generatedGroup) {
-    const svg = step3Container.querySelector("svg");
-    if (svg) {
-      generatedGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      generatedGroup.setAttribute("id", "generatedStars");
-      svg.insertBefore(generatedGroup, svg.firstChild);
+  // Générer les 300 étoiles dans un <g> dédié
+  // Vérifier que generatedGroup existe ET qu'il est attaché au DOM actuel
+  const svg = step3Container.querySelector("svg");
+  const needsRegeneration = !generatedGroup || !generatedGroup.parentNode || generatedGroup.parentNode !== svg;
 
-      for (let i = 0; i < 300; i++) {
-        const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        const x = Math.random() * 800;
-        const y = Math.random() * 600;
-        const r = Math.random() * 1.5 + 0.5;
-
-        star.setAttribute("cx", x);
-        star.setAttribute("cy", y);
-        star.setAttribute("r", r);
-        star.setAttribute("fill", "#eadd42");
-        star.setAttribute("opacity", "1");
-        generatedGroup.appendChild(star);
-      }
-      
-      console.log("🌟 Généré", generatedGroup.children.length, "étoiles");
+  if (needsRegeneration && svg) {
+    // Si l'ancien groupe existe mais orphelin, le nettoyer
+    if (generatedGroup) {
+      generatedGroup = null;
     }
+
+    generatedGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    generatedGroup.setAttribute("id", "generatedStars");
+    svg.insertBefore(generatedGroup, svg.firstChild);
+
+    // Réinitialiser les données originales
+    originalStarsData = [];
+
+    for (let i = 0; i < 300; i++) {
+      const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const x = Math.random() * 800;
+      const y = Math.random() * 600;
+      const r = Math.random() * 1.5 + 0.5;
+
+      star.setAttribute("cx", x);
+      star.setAttribute("cy", y);
+      star.setAttribute("r", r);
+      star.setAttribute("fill", "#eadd42");
+      star.setAttribute("opacity", "1");
+      generatedGroup.appendChild(star);
+
+      // Sauvegarder les positions originales
+      originalStarsData.push({ cx: x, cy: y, r: r, fill: "#eadd42" });
+    }
+
+    console.log("🌟 Généré", generatedGroup.children.length, "étoiles");
   }
 
   // S'assurer que les étoiles générées sont visibles
@@ -170,42 +183,67 @@ export function hideStep3({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      // Fade out rapide sans reset complet
-      gsap.to(step3Container, { 
-        opacity: 0, 
+      // Fade out rapide avec reset complet des éléments
+      gsap.to(step3Container, {
+        opacity: 0,
         duration: 0.3,
         ease: "power2.out",
-        onComplete: resolve
+        onComplete: () => {
+          // Reset des cercles générés à leurs positions originales
+          if (generatedGroup && generatedGroup.parentNode && originalStarsData.length) {
+            const circles = generatedGroup.querySelectorAll("circle");
+            circles.forEach((circle, i) => {
+              const data = originalStarsData[i];
+              if (data) {
+                circle.setAttribute("cx", data.cx);
+                circle.setAttribute("cy", data.cy);
+                circle.setAttribute("r", data.r);
+                circle.setAttribute("fill", data.fill);
+                gsap.set(circle, {
+                  opacity: 1,
+                  visibility: "visible",
+                  clearProps: "transform,x,y"
+                });
+              }
+            });
+          }
+
+          // Reset des étoiles et têtes du SVG original qui ont été rendues visibles
+          const etoiles = step3Container.querySelectorAll('circle[id^="step3Etoile"]');
+          const tetes = step3Container.querySelectorAll('g[id^="step3Tete"]');
+
+          gsap.set(etoiles, {
+            opacity: 0,
+            visibility: "visible",
+            clearProps: "transform,x,y"
+          });
+
+          gsap.set(tetes, {
+            opacity: 0,
+            visibility: "visible",
+            clearProps: "transform,x,y"
+          });
+
+          console.log("🧹 Step3 nettoyé en mode soft");
+          resolve();
+        }
       });
     } else {
-      // Reset complet
+      // Reset complet avec destruction du DOM
       gsap.to(step3Container, {
         opacity: 0,
         duration: 0.5,
         ease: "power2.out",
         onComplete: () => {
-          // Reset tous les éléments SVG
-          const allEls = step3Container.querySelectorAll("g, path, rect, circle");
-          gsap.set(allEls, { 
-            opacity: 0, 
-            visibility: "hidden",
-            clearProps: "all" 
-          });
-
-          // Nettoyer le groupe d'étoiles générées
-          if (generatedGroup) {
-            gsap.set(generatedGroup.querySelectorAll("circle"), { 
-              opacity: 0,
-              visibility: "hidden"
-            });
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step3Container && step3Container.parentNode) {
+            step3Container.parentNode.removeChild(step3Container);
           }
-          
-          gsap.set(step3Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step3 complètement nettoyé");
+          step3Container = null;
+          generatedGroup = null;
+          originalStarsData = [];
+
+          console.log("🧹 Step3 complètement détruit");
           resolve();
         }
       });

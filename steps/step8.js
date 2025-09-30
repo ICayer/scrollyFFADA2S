@@ -110,21 +110,13 @@ export function hideStep8({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      // Fade out rapide sans reset complet
-      gsap.to(step8Container, { 
-        opacity: 0, 
-        duration: 0.3,
-        ease: "power2.out",
-        onComplete: resolve
-      });
-    } else {
-      // Reset complet
+      // Fade out rapide avec reset des éléments
       gsap.to(step8Container, {
         opacity: 0,
-        duration: 0.5,
+        duration: 0.3,
         ease: "power2.out",
         onComplete: () => {
-          // Reset spirale et stripes spécifiquement
+          // Reset de la spirale et des stripes à leur état initial (opacity 0)
           const spirale = step8Container.querySelector("#step8Spirale");
           const stripes = [
             "#stripe1", "#stripe2", "#stripe3", "#stripe4", "#stripe5",
@@ -132,30 +124,42 @@ export function hideStep8({ soft = false } = {}) {
           ];
 
           if (spirale) {
-            gsap.set(spirale, { 
-              opacity: 0, 
-              visibility: "hidden",
-              clearProps: "all" 
+            gsap.set(spirale, {
+              opacity: 0,
+              visibility: "visible",
+              clearProps: "transform"
             });
           }
 
           stripes.forEach(sel => {
             const el = step8Container.querySelector(sel);
             if (el) {
-              gsap.set(el, { 
-                opacity: 0, 
-                visibility: "hidden",
-                clearProps: "all" 
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform"
               });
             }
           });
 
-          gsap.set(step8Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step8 complètement nettoyé");
+          console.log("🧹 Step8 réinitialisé en mode soft");
+          resolve();
+        }
+      });
+    } else {
+      // Reset complet avec destruction du DOM
+      gsap.to(step8Container, {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        onComplete: () => {
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step8Container && step8Container.parentNode) {
+            step8Container.parentNode.removeChild(step8Container);
+          }
+          step8Container = null;
+
+          console.log("🧹 Step8 complètement détruit");
           resolve();
         }
       });

@@ -176,54 +176,97 @@ export function hideStep9({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      gsap.to(step9Container, { opacity: 0, duration: 0.3, ease: "power2.out", onComplete: resolve });
-    } else {
+      // Fade out rapide avec reset complet des éléments
       gsap.to(step9Container, {
         opacity: 0,
-        duration: 0.5,
+        duration: 0.3,
         ease: "power2.out",
         onComplete: () => {
           const initialEls = ["#step9Lune", "#step9Famille", "#step9Femme"];
           const stripes = ["#stripe1", "#stripe2", "#stripe3"];
           const coeurs = ["#coeur1", "#coeur2", "#coeur3"];
 
-          // reset stripes avec d original
+          // Reset stripes avec leurs formes originales
           stripes.forEach(sel => {
             const el = step9Container.querySelector(sel);
-            if (el) {
-              if (originalStripesD[sel]) el.setAttribute("d", originalStripesD[sel]);
-              gsap.set(el, { opacity: 0, visibility: "visible", x: 0, y: 0 });
+            if (el && originalStripesD[sel]) {
+              el.setAttribute("d", originalStripesD[sel]);
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform,x,y"
+              });
             }
           });
 
-          // reset coeurs cachés
+          // Reset coeurs (cachés)
           coeurs.forEach(sel => {
             const el = step9Container.querySelector(sel);
-            if (el) gsap.set(el, { opacity: 0, visibility: "hidden" });
+            if (el) {
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "hidden"
+              });
+            }
           });
 
-          // reset etoileDebut (prêt à réapparaître)
+          // Reset etoileDebut (caché, cercles repositionnés)
           const etoileDebutEl = step9Container.querySelector("#etoileDebut");
           if (etoileDebutEl) {
-            gsap.set(etoileDebutEl, { opacity: 0, visibility: "visible" });
+            gsap.set(etoileDebutEl, {
+              opacity: 0,
+              visibility: "visible"
+            });
             const circles = etoileDebutEl.querySelectorAll("circle");
-            gsap.set(circles, { x: 0, y: 0, opacity: 0, visibility: "visible" });
+            circles.forEach(circle => {
+              gsap.set(circle, {
+                x: 0,
+                y: 0,
+                clearProps: "fill"
+              });
+            });
           }
 
-          // reset etoileFin (caché)
+          // Reset etoileFin (caché)
           const etoileFinEl = step9Container.querySelector("#etoileFin");
           if (etoileFinEl) {
-            gsap.set(etoileFinEl, { opacity: 0, visibility: "hidden" });
+            gsap.set(etoileFinEl, {
+              opacity: 0,
+              visibility: "hidden"
+            });
           }
 
-          // reset initiaux
+          // Reset éléments initiaux (visibles)
           initialEls.forEach(sel => {
             const el = step9Container.querySelector(sel);
-            if (el) gsap.set(el, { opacity: 1, visibility: "visible" });
+            if (el) {
+              gsap.set(el, {
+                opacity: 1,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            }
           });
 
-          gsap.set(step9Container, { display: "none", pointerEvents: "none" });
-          console.log("🧹 Step9 complètement nettoyé");
+          console.log("🧹 Step9 réinitialisé en mode soft");
+          resolve();
+        }
+      });
+    } else {
+      // Reset complet avec destruction du DOM
+      gsap.to(step9Container, {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        onComplete: () => {
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step9Container && step9Container.parentNode) {
+            step9Container.parentNode.removeChild(step9Container);
+          }
+          step9Container = null;
+          originalStripesD = {};
+
+          console.log("🧹 Step9 complètement détruit");
           resolve();
         }
       });

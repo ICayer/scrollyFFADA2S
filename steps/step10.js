@@ -202,33 +202,35 @@ export function hideStep10({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      // Fade out rapide sans reset complet
-      gsap.to(step10Container, { 
-        opacity: 0, 
-        duration: 0.3,
-        ease: "power2.out",
-        onComplete: resolve
-      });
-    } else {
-      // Reset complet
+      // Fade out rapide avec reset complet des éléments
       gsap.to(step10Container, {
         opacity: 0,
-        duration: 0.5,
+        duration: 0.3,
         ease: "power2.out",
         onComplete: () => {
-          // Reset spécifique de tous les éléments step10
           const initialEls = ["#step10Sol", "#step10Famille", "#step10Coeur"];
           const specialEls = ["#step10Lune", "#step10PleineLune", "#step10Communaute"];
-          const allStaticEls = [...initialEls, ...specialEls];
-          
-          // Reset éléments statiques
-          allStaticEls.forEach(sel => {
+
+          // Reset éléments spéciaux (cachés)
+          specialEls.forEach(sel => {
             const el = step10Container.querySelector(sel);
             if (el) {
-              gsap.set(el, { 
-                opacity: 0, 
-                visibility: "hidden",
-                clearProps: "all" 
+              gsap.set(el, {
+                opacity: 0,
+                visibility: "visible",
+                clearProps: "transform"
+              });
+            }
+          });
+
+          // Reset éléments initiaux (visibles)
+          initialEls.forEach(sel => {
+            const el = step10Container.querySelector(sel);
+            if (el) {
+              gsap.set(el, {
+                opacity: 1,
+                visibility: "visible",
+                clearProps: "transform"
               });
             }
           });
@@ -237,32 +239,43 @@ export function hideStep10({ soft = false } = {}) {
           for (let i = 1; i <= 67; i++) {
             const etoileDebut = step10Container.querySelector(`#etoileDebut${i}`);
             const etoileFin = step10Container.querySelector(`#etoileFin${i}`);
-            
+
             if (etoileDebut) {
-              gsap.set(etoileDebut, { 
-                opacity: 0, 
-                visibility: "hidden",
-                x: 0, 
+              gsap.set(etoileDebut, {
+                opacity: 0,
+                visibility: "visible",
+                x: 0,
                 y: 0,
-                clearProps: "all" 
+                clearProps: "transform"
               });
             }
-            
+
             if (etoileFin) {
-              gsap.set(etoileFin, { 
-                opacity: 0, 
-                visibility: "hidden",
-                clearProps: "all" 
+              gsap.set(etoileFin, {
+                opacity: 0,
+                visibility: "hidden"
               });
             }
           }
 
-          gsap.set(step10Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step10 complètement nettoyé");
+          console.log("🧹 Step10 réinitialisé en mode soft (67 étoiles)");
+          resolve();
+        }
+      });
+    } else {
+      // Reset complet avec destruction du DOM
+      gsap.to(step10Container, {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        onComplete: () => {
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step10Container && step10Container.parentNode) {
+            step10Container.parentNode.removeChild(step10Container);
+          }
+          step10Container = null;
+
+          console.log("🧹 Step10 complètement détruit");
           resolve();
         }
       });

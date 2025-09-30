@@ -46,12 +46,24 @@ export async function showStep4() {
     return Promise.reject("SVG root non trouvé");
   }
 
-  const oldAnimGroup = svgRoot.querySelector("#step4_animations");
-  if (oldAnimGroup) oldAnimGroup.remove();
+  // Vérifier si animationGroup existe et est attaché au DOM actuel
+  const needsNewAnimGroup = !animationGroup || !animationGroup.parentNode || animationGroup.parentNode !== svgRoot;
 
-  animationGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-  animationGroup.id = "step4_animations";
-  svgRoot.appendChild(animationGroup);
+  if (needsNewAnimGroup) {
+    // Nettoyer l'ancien groupe s'il existe dans le SVG
+    const oldAnimGroup = svgRoot.querySelector("#step4_animations");
+    if (oldAnimGroup) oldAnimGroup.remove();
+
+    // Créer un nouveau groupe d'animation
+    animationGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    animationGroup.id = "step4_animations";
+    svgRoot.appendChild(animationGroup);
+  }
+
+  // Réinitialiser les arrays pour éviter les vieilles références DOM
+  stars = [];
+  pearls = [];
+  originalStarsData = [];
 
   luneFemme = svgRoot.querySelector("#lune_x5F_femme");
   stars = Array.from(svgRoot.querySelectorAll("#etoile circle"));
@@ -221,68 +233,79 @@ export function hideStep4({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      gsap.to(step4Container, { 
-        opacity: 0, 
-        duration: 0.3,
-        ease: "power2.out",
-        onComplete: resolve
-      });
-    } else {
+      // Fade out rapide avec reset des éléments générés
       gsap.to(step4Container, {
         opacity: 0,
-        duration: 0.5,
+        duration: 0.3,
         ease: "power2.out",
         onComplete: () => {
-          if (animationGroup) {
-            animationGroup.remove();
-            animationGroup = null;
+          // Nettoyer le groupe d'animation contenant les clones
+          if (animationGroup && animationGroup.parentNode) {
+            // Supprimer tous les clones
+            while (animationGroup.firstChild) {
+              animationGroup.removeChild(animationGroup.firstChild);
+            }
           }
 
+          // Restaurer les étoiles originales à leur état initial
           if (stars.length && originalStarsData.length) {
             stars.forEach((star, i) => {
               const data = originalStarsData[i];
               if (data && star) {
+                star.setAttribute("cx", data.cx);
+                star.setAttribute("cy", data.cy);
+                star.setAttribute("r", data.r);
+                star.setAttribute("fill", data.fill);
+                star.style.fill = "";
                 gsap.set(star, {
                   opacity: 0,
-                  visibility: "hidden",
-                  attr: {
-                    cx: data.cx,
-                    cy: data.cy, 
-                    r: data.r,
-                    fill: data.fill
-                  },
+                  visibility: "visible",
                   clearProps: "transform,x,y"
                 });
               }
             });
           }
 
+          // Reset des perles
           if (pearls.length) {
-            gsap.set(pearls, { 
+            gsap.set(pearls, {
               opacity: 0,
-              visibility: "hidden",
+              visibility: "visible",
               clearProps: "all"
             });
           }
 
+          // Reset de la lune-femme
           if (luneFemme) {
-            gsap.set(luneFemme, { 
+            gsap.set(luneFemme, {
               opacity: 0,
-              visibility: "hidden"
+              visibility: "visible"
             });
           }
 
+          console.log("🧹 Step4 nettoyé en mode soft");
+          resolve();
+        }
+      });
+    } else {
+      // Reset complet avec destruction du DOM
+      gsap.to(step4Container, {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        onComplete: () => {
+          // Détruire complètement le conteneur pour éviter les IDs dupliqués
+          if (step4Container && step4Container.parentNode) {
+            step4Container.parentNode.removeChild(step4Container);
+          }
+          step4Container = null;
+          animationGroup = null;
           stars = [];
           pearls = [];
           luneFemme = null;
           originalStarsData = [];
 
-          gsap.set(step4Container, { 
-            display: "none",
-            pointerEvents: "none"
-          });
-          
-          console.log("🧹 Step4 complètement nettoyé");
+          console.log("🧹 Step4 complètement détruit");
           resolve();
         }
       });

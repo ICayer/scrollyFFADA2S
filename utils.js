@@ -11,7 +11,9 @@
  */
 export async function loadSVG(path, containerId, parentId = "graphic", visibleId = null) {
   try {
-    const response = await fetch(path);
+    // Ajouter un cache buster pour forcer le rechargement du SVG
+    const cacheBuster = `?v=${Date.now()}`;
+    const response = await fetch(path + cacheBuster);
     if (!response.ok) {
       console.error(`❌ Impossible de charger le SVG: ${path}`);
       return null;
