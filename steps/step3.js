@@ -53,30 +53,36 @@ export async function showStep3() {
   gsap.set(etoiles, { opacity: 0, visibility: "visible" });
   gsap.set(tetes, { opacity: 0, visibility: "visible" });
 
-  // Générer les 200 étoiles dans un <g> dédié (seulement si pas déjà fait)
-  if (!generatedGroup) {
-    const svg = step3Container.querySelector("svg");
-    if (svg) {
-      generatedGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      generatedGroup.setAttribute("id", "generatedStars");
-      svg.insertBefore(generatedGroup, svg.firstChild);
+  // Générer les 300 étoiles dans un <g> dédié
+  // Vérifier que generatedGroup existe ET qu'il est attaché au DOM actuel
+  const svg = step3Container.querySelector("svg");
+  const needsRegeneration = !generatedGroup || !generatedGroup.parentNode || generatedGroup.parentNode !== svg;
 
-      for (let i = 0; i < 300; i++) {
-        const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        const x = Math.random() * 800;
-        const y = Math.random() * 600;
-        const r = Math.random() * 1.5 + 0.5;
-
-        star.setAttribute("cx", x);
-        star.setAttribute("cy", y);
-        star.setAttribute("r", r);
-        star.setAttribute("fill", "#eadd42");
-        star.setAttribute("opacity", "1");
-        generatedGroup.appendChild(star);
-      }
-      
-      console.log("🌟 Généré", generatedGroup.children.length, "étoiles");
+  if (needsRegeneration && svg) {
+    // Si l'ancien groupe existe mais orphelin, le nettoyer
+    if (generatedGroup) {
+      generatedGroup = null;
     }
+
+    generatedGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    generatedGroup.setAttribute("id", "generatedStars");
+    svg.insertBefore(generatedGroup, svg.firstChild);
+
+    for (let i = 0; i < 300; i++) {
+      const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const x = Math.random() * 800;
+      const y = Math.random() * 600;
+      const r = Math.random() * 1.5 + 0.5;
+
+      star.setAttribute("cx", x);
+      star.setAttribute("cy", y);
+      star.setAttribute("r", r);
+      star.setAttribute("fill", "#eadd42");
+      star.setAttribute("opacity", "1");
+      generatedGroup.appendChild(star);
+    }
+
+    console.log("🌟 Généré", generatedGroup.children.length, "étoiles");
   }
 
   // S'assurer que les étoiles générées sont visibles
@@ -170,12 +176,22 @@ export function hideStep3({ soft = false } = {}) {
 
   return new Promise((resolve) => {
     if (soft) {
-      // Fade out rapide sans reset complet
-      gsap.to(step3Container, { 
-        opacity: 0, 
+      // Fade out rapide avec reset des cercles générés
+      gsap.to(step3Container, {
+        opacity: 0,
         duration: 0.3,
         ease: "power2.out",
-        onComplete: resolve
+        onComplete: () => {
+          // Reset des cercles générés pour permettre une réactivation propre
+          if (generatedGroup && generatedGroup.parentNode) {
+            const circles = generatedGroup.querySelectorAll("circle");
+            gsap.set(circles, {
+              opacity: 1,
+              clearProps: "transform,x,y,attr"
+            });
+          }
+          resolve();
+        }
       });
     } else {
       // Reset complet avec destruction du DOM
